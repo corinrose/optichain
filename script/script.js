@@ -29,14 +29,14 @@ class Location {
 // class of resources, or an inputs to a recipe
 // name : string
 // amt : nat num
-// loc : Location
-// val : nat num
+// loc : Location, optional so this can represent a generic resource or a concrete one
+// val : nat num, dollars
 class Resource {
-    constructor(name, amt, loc, val) {
+    constructor(name, amt, val, loc = null) {
         this.name = name;
         this.amt = amt;
-        this.loc = loc;
         this.val = val;
+        this.loc = loc;
     }
 }
 
@@ -103,6 +103,41 @@ class Recipe {
     }
 }
 
+// defining resources, recipes, locations, and sources for our demo application
+
+// resources: hammer, stick, raw_wood, hammer_head, raw_metal
+
+const hammer = new Resource("hammer", 1, 20);
+const stick = new Resource("stick", 1, 1);
+const raw_wood = new Resource("raw_wood", 1, 0.25);
+const hammer_head = new Resource("hammer_head", 1, 10);
+const raw_metal = new Resource("raw_metal", 1, 5);
+
+
+// recipes: hammer, stick, hammer head
+//
+// we see each recipe has a tree structure,
+// with the root being the outputs,
+// leaf nodes being the raw materials,
+// and internal nodes being intermediate resources
+
+const hammer_recipe = new Recipe([stick, hammer_head], 5, hammer);
+const stick_recipe = new Recipe([raw_wood], 0.25, stick);
+const hammer_head_recipe = new Recipe([raw_metal], 2, hammer_head);
+
+// locations: poughkeepsie, williamstown
+
+const pok = new Location("Poughkeepsie", 0, 0);
+const wil = new Location("Williamstown", 0, 0);
+
+// sources: lumber yards, scrap metal yards
+// randomized locations
+
+const pok_metal = new Source(Location("Poughkeepsie", 3, -5), [Resource("raw_metal", 10, 5)], 0.15);
+const pok_wood = new Source(Location("Poughkeepsie", -4, 0), [Resource("raw_wood", 25, 1)], 0.2);
+
+const wil_metal = new Source(Location("Williamstown", 2, -1), [Resource("raw_metal", 6, 5)], 0.12);
+const wil_wood = new Source(Location("Williamstown", 0, -2), [Resource("raw_wood", 22, 1)], 0.21);
 
 function submit() {
     
